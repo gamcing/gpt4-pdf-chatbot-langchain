@@ -5,24 +5,23 @@ import { PromptTemplate } from 'langchain/prompts';
 import { CallbackManager } from 'langchain/callbacks';
 
 const CONDENSE_PROMPT =
-  PromptTemplate.fromTemplate(`Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
+  PromptTemplate.fromTemplate(`鉴于以下对话和追问，将追问的问题改写为一个单独的问题。
 
-Chat History:
+对话的历史记录:
 {chat_history}
-Follow Up Input: {question}
-Standalone question:`);
+追问: {question}
+独立问题:`);
 
 const QA_PROMPT = PromptTemplate.fromTemplate(
-  `You are an AI assistant providing helpful advice. You are given the following extracted parts of a long document and a question. Provide a conversational answer based on the context provided.
-You should only provide hyperlinks that reference the context below. Do NOT make up hyperlinks.
-If you can't find the answer in the context below, just say "Hmm, I'm not sure." Don't try to make up an answer.
-If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context.
-
-Question: {question}
+  `您是提供员工保险理赔的AI向导。以下是保险手册的一部分相关问题的材料。根据以下提供的上下文生成答案。
+  您只能引用以下的文字内容。不要编造答案。
+  如果您在下面的文字中找不到答案，只需回答："我不确定。"
+  不要试图编造答案。
+问题: {question}
 =========
 {context}
 =========
-Answer in Markdown:`,
+用Markdown来回答:`,
 );
 
 export const makeChain = (
@@ -36,7 +35,7 @@ export const makeChain = (
   const docChain = loadQAChain(
     new OpenAIChat({
       temperature: 0,
-      modelName: 'gpt-4', //change this to older versions (e.g. gpt-3.5-turbo) if you don't have access to gpt-4
+      modelName: 'gpt-3.5-turbo', //change this to older versions (e.g. gpt-3.5-turbo) if you don't have access to gpt-4
       streaming: Boolean(onTokenStream),
       callbackManager: onTokenStream
         ? CallbackManager.fromHandlers({
